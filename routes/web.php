@@ -1,22 +1,20 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PasienController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PegawaiController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/Kabar', function () {
-    return view('kondisi');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/nilai', function () {
-    return view('nilai');
-});
-
-Route::get('/admin', [AdminController::class, 'index']);
-route::get('/admin/pasien', [PasienController::class, 'index']);
-Route::get('/pegawai', [PegawaiController::class, 'index']);
+require __DIR__.'/auth.php';

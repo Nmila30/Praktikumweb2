@@ -21,7 +21,7 @@ class PasienController extends Controller
      */
     public function create()
     {
-        //
+        return view('pasien.create');
     }
 
     /**
@@ -29,7 +29,28 @@ class PasienController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //cek validasi
+        $request->Validate([
+            'kode' => 'required|string',
+            'nama' => 'required|string',
+            'tmp_lahir' => 'required|string',
+            'tgl_lahir' => 'required|date',
+            'gender' => 'required|string',
+            'email' => 'required|string',
+            'alamat' => 'required|string',
+            ]);
+            //kirim data ke database
+            Pasien::create([
+               'kode' => $request->Kode, 
+               'nama' => $request->nama, 
+               'tmp_lahir' => $request->tmp_lahir, 
+               'tgl_lahir' => $request->tgl_lahir, 
+               'gender' => $request->gender, 
+               'email' => $request->email, 
+               'alamat' => $request->alamat, 
+            ]);
+            //redirect ke index
+            return redirect ()->route('pasiens.index');
     }
 
     /**
@@ -37,7 +58,7 @@ class PasienController extends Controller
      */
     public function show(Pasien $pasien)
     {
-        //
+        return view('pasien.show', compact('pasien'));
     }
 
     /**
@@ -45,7 +66,7 @@ class PasienController extends Controller
      */
     public function edit(Pasien $pasien)
     {
-        //
+        return view('pasien.edit', compact('pasien'));
     }
 
     /**
@@ -53,14 +74,15 @@ class PasienController extends Controller
      */
     public function update(Request $request, Pasien $pasien)
     {
-        //
+        $pasien->update($request->all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Pasien $pasien)
     {
-        //
+        // Delete the Pasien instance
+        $pasien->delete();
+
+        // Redirect back to the index page with a success message
+        return redirect()->route('pasiens.index')->with('success', 'Pasien deleted successfully');
     }
 }
